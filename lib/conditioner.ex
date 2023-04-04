@@ -1,17 +1,4 @@
 defmodule Conditioner do
-  @moduledoc """
-  Documentation for `Conditioner`.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Conditioner.hello()
-      :world
-
-  """
   def match?([], value, matcher) do
     apply(matcher, :match_empty_conditions, [value])
   end
@@ -35,7 +22,7 @@ defmodule Conditioner do
       rule, acc when is_function(rule, 1) ->
         [rule.(value) | acc]
 
-      rule, acc when is_boolean(acc) ->
+      rule, acc when is_boolean(rule) ->
         [rule | acc]
 
       _, acc ->
@@ -47,19 +34,14 @@ defmodule Conditioner do
   defp parse_condition(%{"or" => conditions}, value, matcher) do
     conditions
     |> Enum.map(&parse_condition(&1, value, matcher))
-    |> Enum.reduce_while([], fn
-      rule, _acc when is_function(rule, 1) ->
-        case rule.(value) do
-          false -> {:halt, false}
-          true -> {:cont, true}
-        end
+    |> Enum.reduce([], fn
+      rule, acc when is_function(rule, 1) ->
+        [rule.(value) | acc]
 
-      rule, acc when is_boolean(acc) ->
-        case rule do
-          false -> {:halt, false}
-          true -> {:cont, true}
-        end
+      rule, acc when is_boolean(rule) ->
+        [rule | acc]
     end)
+    |> Enum.any?()
   end
 
   defp parse_condition(rule, _value, _matcher) when is_boolean(rule) do
@@ -88,3 +70,4 @@ defmodule Conditioner do
     apply(matcher, :match, [rule, value])
   end
 end
+
