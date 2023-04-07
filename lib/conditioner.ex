@@ -13,34 +13,25 @@ defmodule Conditioner do
     |> Enum.all?()
   end
 
-  # co jesli pusty and
-  # co jesli pusty or
+  defp parse_condition(%{"and" => []} = branch, value, matcher) do
+    apply(matcher, :on_empty_and, [branch, value])
+  end
+
+  defp parse_condition(%{"or" => []} = branch, value, matcher) do
+    apply(matcher, :on_empty_or, [branch, value])
+  end
+
   defp parse_condition(%{"and" => conditions}, value, matcher) do
     conditions
     |> Enum.map(&parse_condition(&1, value, matcher))
-    |> Enum.reduce([], fn
-      rule, acc when is_function(rule, 1) ->
-        [rule.(value) | acc]
-
-      rule, acc when is_boolean(rule) ->
-        [rule | acc]
-
-      _, acc ->
-        acc
-    end)
+    |> Enum.reduce([], &unpack_value(&1, value, &2))
     |> Enum.all?()
   end
 
   defp parse_condition(%{"or" => conditions}, value, matcher) do
     conditions
     |> Enum.map(&parse_condition(&1, value, matcher))
-    |> Enum.reduce([], fn
-      rule, acc when is_function(rule, 1) ->
-        [rule.(value) | acc]
-
-      rule, acc when is_boolean(rule) ->
-        [rule | acc]
-    end)
+    |> Enum.reduce([], &unpack_value(&1, value, &2))
     |> Enum.any?()
   end
 
@@ -68,6 +59,14 @@ defmodule Conditioner do
 
   defp call_matcher(rule, value, matcher) do
     apply(matcher, :match, [rule, value])
+  end
+
+  defp unpack_value(rule, value, acc) when is_function(rule, 1) do
+    [rule.(value) | acc]
+  end
+
+  defp unpack_value(rule, _value, acc) when is_boolean(rule) do
+    [rule | acc]
   end
 end
 
