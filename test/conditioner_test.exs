@@ -16,6 +16,16 @@ defmodule ConditionerTest do
     end
   end
 
+  defmodule MatcherWithContext do
+    def match(%{raise: "lo"}, ["rule", "contains", _str], _value) do
+      raise "woof!"
+    end
+
+    def match(_ctx, ["rule", "contains", str], value) do
+      String.contains?(value, str)
+    end
+  end
+
   test "parses basic condition" do
     conditions = %{
       "and" => [
@@ -33,6 +43,25 @@ defmodule ConditionerTest do
 
     result = Conditioner.match?(conditions, "hello", SomeMatcher)
 
+    assert result
+  end
+
+  test "parses rules starting with OR condition" do
+    conditions = %{
+      "or" => [
+        ["filename", "containsfn", "he"],
+        ["filename", "containsfn", "lo"],
+        ["otherrule", "contains", "lo"],
+        %{
+          "or" => [
+            false,
+            ["filename", "containsfn", "he"]
+          ]
+        }
+      ]
+    }
+
+    result = Conditioner.match?(conditions, "hello", SomeMatcher)
     assert result
   end
 
@@ -77,5 +106,22 @@ defmodule ConditionerTest do
 
     result = Conditioner.match?(conditions, "hello", SomeMatcher)
     refute result
+  end
+
+  test "calls matcher module with provided context" do
+    conditions = %{
+      "and" => [
+        ["rule", "contains", "lo"],
+        %{
+          "or" => [
+            ["rule", "contains", "he"]
+          ]
+        }
+      ]
+    }
+
+    assert_raise RuntimeError, fn ->
+      Conditioner.match?(conditions, "hello", {MatcherWithContext, %{raise: "lo"}})
+    end
   end
 end
