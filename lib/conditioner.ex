@@ -14,11 +14,11 @@ defmodule Conditioner do
   end
 
   defp parse_condition(%{"and" => []} = branch, value, matcher) do
-    apply(matcher, :on_empty_and, [branch, value])
+    apply(matcher, :match_empty_and, [branch, value])
   end
 
   defp parse_condition(%{"or" => []} = branch, value, matcher) do
-    apply(matcher, :on_empty_or, [branch, value])
+    apply(matcher, :match_empty_or, [branch, value])
   end
 
   defp parse_condition(%{"and" => conditions}, value, matcher) do
@@ -69,4 +69,3 @@ defmodule Conditioner do
     [rule | acc]
   end
 end
-
