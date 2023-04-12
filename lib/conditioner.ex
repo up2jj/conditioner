@@ -13,6 +13,14 @@ defmodule Conditioner do
     |> Enum.all?()
   end
 
+  defp parse_condition(%{"and" => val}, _value, _matcher) when is_boolean(val) do
+    val
+  end
+
+  defp parse_condition(%{"or" => val}, _value, _matcher) when is_boolean(val) do
+    val
+  end
+
   defp parse_condition(%{"and" => []} = branch, value, matcher) do
     apply(matcher, :match_empty_and, [branch, value])
   end

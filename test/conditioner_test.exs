@@ -46,6 +46,27 @@ defmodule ConditionerTest do
     assert result
   end
 
+  test "parses nested conditions" do
+    conditions = %{
+      "and" => [
+        ["filename", "containsfn", "he"],
+        ["filename", "containsfn", "lo"],
+        ["otherrule", "contains", "lo"],
+        %{
+          "or" => [
+            ["filename", "containsfn", "bo"],
+            ["filename", "containsfn", "he"],
+            %{"and" => true}
+          ]
+        }
+      ]
+    }
+
+    result = Conditioner.match?(conditions, "hello", SomeMatcher)
+
+    assert result
+  end
+
   test "parses rules starting with OR condition" do
     conditions = %{
       "or" => [
