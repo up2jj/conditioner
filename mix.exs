@@ -1,6 +1,6 @@
 defmodule Conditioner.MixProject do
   use Mix.Project
-  @version "0.1.0"
+  @version "0.2.0"
   @url_docs "http://hexdocs.pm/conditioner"
   @url_github "https://github.com/up2jj/conditioner"
   def project do
@@ -23,8 +23,17 @@ defmodule Conditioner.MixProject do
         maintainers: ["Jakub Jasiulewicz"]
       },
       docs: [
+        main: "readme",
+        extras: [
+          "README.md"
+        ],
         source_ref: "#{@version}",
-        source_url: @url_github
+        source_url: @url_github,
+        groups_for_modules: [
+          "Built-in matchers": [
+            Conditioner.Matchers.AccessMatcher
+          ]
+        ]
       ],
       version: @version,
       elixir: "~> 1.14",

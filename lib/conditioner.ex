@@ -29,13 +29,13 @@ defmodule Conditioner do
   defmodule SomeMatcher do
     use Conditioner.Matcher
 
-    def match(["filename", "containsfn", str], _original_value) do
+    def match?(["filename", "containsfn", str], _original_value) do
       fn val ->
         String.contains?(val, str)
       end
     end
 
-    def match(["otherrule", "contains", str], value) do
+    def match?(["otherrule", "contains", str], value) do
       String.contains?(value, str)
     end
   end
@@ -103,7 +103,7 @@ defmodule Conditioner do
   end
 
   defp call_matcher(rule, value, {m, a}) do
-    call_matcher(rule, value, {m, :match, a})
+    call_matcher(rule, value, {m, :match?, a})
   end
 
   defp call_matcher(rule, value, {m, f, a}) do
@@ -117,7 +117,7 @@ defmodule Conditioner do
   end
 
   defp call_matcher(rule, value, matcher) do
-    apply(matcher, :match, [rule, value])
+    apply(matcher, :match?, [rule, value])
   end
 
   defp unpack_value(rule, value, acc) when is_function(rule, 1) do

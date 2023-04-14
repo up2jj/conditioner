@@ -1,27 +1,26 @@
 defmodule ConditionerTest do
   use ExUnit.Case
-  # doctest Conditioner
 
   defmodule SomeMatcher do
     use Conditioner.Matcher
 
-    def match(["filename", "containsfn", str], _original_value) do
+    def match?(["filename", "containsfn", str], _original_value) do
       fn val ->
         String.contains?(val, str)
       end
     end
 
-    def match(["otherrule", "contains", str], value) do
+    def match?(["otherrule", "contains", str], value) do
       String.contains?(value, str)
     end
   end
 
   defmodule MatcherWithContext do
-    def match(%{raise: "lo"}, ["rule", "contains", _str], _value) do
+    def match?(%{raise: "lo"}, ["rule", "contains", _str], _value) do
       raise "woof!"
     end
 
-    def match(_ctx, ["rule", "contains", str], value) do
+    def match?(_ctx, ["rule", "contains", str], value) do
       String.contains?(value, str)
     end
   end

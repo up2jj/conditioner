@@ -1,11 +1,13 @@
 defmodule Conditioner.Matchers.AccessMatcher do
-  def match(rules, rule, value) when is_binary(rule) do
+  use Conditioner.Matcher
+
+  def match?(rules, rule, value) when is_binary(rule) do
     rule = String.split(rule, ".")
 
-    match(rules, rule, value)
+    match?(rules, rule, value)
   end
 
-  def match(rules, rule, _value) do
+  def match?(rules, rule, _value) do
     parse(rules, rule)
   end
 
