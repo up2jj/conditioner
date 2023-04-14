@@ -67,7 +67,7 @@ result = Conditioner.match?(conditions, "hello", SomeMatcher)
 ```elixir
 def deps do
   [
-    {:conditioner, "~> 0.1.0"}
+    {:conditioner, "~> 0.2.0"}
   ]
 end
 ```
