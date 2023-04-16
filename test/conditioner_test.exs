@@ -144,4 +144,27 @@ defmodule ConditionerTest do
       Conditioner.match?(conditions, "hello", {MatcherWithContext, %{raise: "lo"}})
     end
   end
+
+  test "calls matcher defined as function" do
+    conditions = %{
+      "and" => [
+        "yes",
+        "no",
+        %{
+          "or" => [
+            "yes",
+            "no"
+          ]
+        }
+      ]
+    }
+
+    matcher = fn
+      "yes", _val -> true
+      "no", _val -> false
+    end
+
+    result = Conditioner.match?(conditions, "hello", matcher)
+    refute result
+  end
 end

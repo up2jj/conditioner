@@ -1,5 +1,9 @@
 # Conditioner
 
+![https://hex.pm/packages/conditioner](https://img.shields.io/hexpm/v/conditioner?color=green)
+
+---
+
 ## Introduction
 
 Conditioner allows you to define and process conditional logic in separated way:
@@ -56,9 +60,11 @@ result = Conditioner.match?(conditions, "hello", SomeMatcher)
 
 ## Changelog
 
-* 0.2.0 - changed `Conditioner.Matcher.match/3` function signature to `match?/3`, docs improvements
+* 0.2.1 - support defining matcher as fun with arity 2,
 
-* 0.1.0 - initial version
+* 0.2.0 - changed `Conditioner.Matcher.match/3` function signature to `match?/3`, docs improvements,
+
+* 0.1.0 - initial version.
 
 
 ## Installation
@@ -67,7 +73,7 @@ result = Conditioner.match?(conditions, "hello", SomeMatcher)
 ```elixir
 def deps do
   [
-    {:conditioner, "~> 0.2.0"}
+    {:conditioner, "~> 0.2.1"}
   ]
 end
 ```

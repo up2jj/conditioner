@@ -1,6 +1,6 @@
 defmodule Conditioner.MixProject do
   use Mix.Project
-  @version "0.2.0"
+  @version "0.2.1"
   @url_docs "http://hexdocs.pm/conditioner"
   @url_github "https://github.com/up2jj/conditioner"
   def project do

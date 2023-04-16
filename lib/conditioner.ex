@@ -1,4 +1,6 @@
 defmodule Conditioner do
+  alias Conditioner.Caller
+
   @moduledoc """
 
   Conditioner allows you to define and process conditional logic in separated way:
@@ -99,25 +101,7 @@ defmodule Conditioner do
   end
 
   defp parse_condition(rule, value, matcher) do
-    call_matcher(rule, value, matcher)
-  end
-
-  defp call_matcher(rule, value, {m, a}) do
-    call_matcher(rule, value, {m, :match?, a})
-  end
-
-  defp call_matcher(rule, value, {m, f, a}) do
-    args = List.wrap(a) ++ [rule, value]
-
-    if function_exported?(m, f, Enum.count(args)) do
-      apply(m, f, args)
-    else
-      raise("Matcher module is invalid")
-    end
-  end
-
-  defp call_matcher(rule, value, matcher) do
-    apply(matcher, :match?, [rule, value])
+    Caller.call_matcher(rule, value, matcher)
   end
 
   defp unpack_value(rule, value, acc) when is_function(rule, 1) do
