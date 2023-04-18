@@ -69,6 +69,8 @@ result = Conditioner.match?(conditions, "hello", SomeMatcher)
 
 ## Changelog
 
+* 0.2.2 - docs improvements, add custom caller exception, 
+
 * 0.2.1 - support defining matcher as fun with arity 2,
 
 * 0.2.0 - changed `Conditioner.Matcher.match/3` function signature to `match?/3`, docs improvements,
@@ -82,7 +84,7 @@ result = Conditioner.match?(conditions, "hello", SomeMatcher)
 ```elixir
 def deps do
   [
-    {:conditioner, "~> 0.2.1"}
+    {:conditioner, "~> 0.2.2"}
   ]
 end
 ```
