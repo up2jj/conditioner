@@ -7,6 +7,10 @@ defmodule Conditioner.Caller do
     fun.(rule, value)
   end
 
+  def call_matcher(rule, value, %module{} = struct) do
+    call_matcher(rule, value, {module, struct})
+  end
+
   def call_matcher(rule, value, {m, a}) do
     call_matcher(rule, value, {m, :match?, a})
   end

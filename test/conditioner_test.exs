@@ -167,4 +167,18 @@ defmodule ConditionerTest do
     result = Conditioner.match?(conditions, "hello", matcher)
     refute result
   end
+
+  test "calls matcher defined as struct" do
+    defmodule StructMatcher do
+      defstruct [:a]
+
+      def match?(%__MODULE__{}, "hello" = comparison, original_value) do
+        comparison == original_value
+      end
+    end
+
+    conditions = %{"and" => ["hello"]}
+
+    assert Conditioner.match?(conditions, "hello", struct(StructMatcher))
+  end
 end
